@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="customer-billing-crm-eapi-main">
+		<http:listener path="/api/*"
+			config-ref="customer-billing-crm-eapi-httpListenerConfig">
+			<http:response
+				statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:router
+			config-ref="customer-billing-crm-eapi-config" />
+	</flow>
+	<flow
+		name="post:\billing\accounts\summary:application\json:customer-billing-crm-eapi-config">
+		<http:request method="POST" doc:name="Billing Summary Details"
+			doc:id="2e902dd9-a324-4d10-ba7a-7a59db5caf5e"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.billSummaryPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+		</http:request>
+	</flow>
+	<flow
+		name="get:\billing\(productId)\statements\(statementId)\details:customer-billing-crm-eapi-config">
+		<ee:transform>
+			<ee:variables>
+				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
+				</ee:set-variable>
+				<ee:set-variable variableName="statementId">attributes.uriParams.'statementId'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="Billing Details"
+			doc:id="450ed45e-ba51-475f-836d-37e9de2087ec"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.billDetailsPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"productId" : vars.productId,
+	"statementId" : vars.statementId
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow
+		name="get:\billing\(productId)\statements\(statementId)\pdf:customer-billing-crm-eapi-config">
+		<ee:transform>
+			<ee:variables>
+				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
+				</ee:set-variable>
+				<ee:set-variable variableName="statementId">attributes.uriParams.'statementId'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="Billing PDF"
+			doc:id="6477fa51-4862-4cd0-8bb9-2c2c9aa9e50e"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.billPdfPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{	
+	"productId" : vars.productId,
+	"statementId" : vars.statementId
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow
+		name="get:\billing\(productId)\currentBill\(ban):customer-billing-crm-eapi-config">
+		<ee:transform>
+			<ee:variables>
+				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
+				</ee:set-variable>
+				<ee:set-variable variableName="ban">attributes.uriParams.'ban'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET"
+			doc:name="Billing Process API currentBill"
+			doc:id="c0ce3afc-3292-45ec-b0e0-1bec03cefb7d"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.currentBillPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"productId" : vars.productId,
+	"ban" : vars.ban
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+</mule>

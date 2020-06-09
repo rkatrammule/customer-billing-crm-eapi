@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="billing-experience-test-suite.xml" />
+	<munit:test name="billing-experience-test-suite-customer-billing-crm-eapi-mainTest" doc:id="a3055014-f436-4f98-b971-f91022f4ff92" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to customer-billing-crm-eapi-main" doc:id="afffc01d-a98d-477b-b0e1-f19556595917" name="customer-billing-crm-eapi-main"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="billing-experience-test-suite-post:\billing\accounts\summary:application\json:customer-billing-crm-eapi-configTest" doc:id="94816ecb-8b3f-42ef-a89c-645e47072e87" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\billing\accounts\summary:application\json:customer-billing-crm-eapi-config" doc:id="1453f6cd-59e3-4f39-bfdb-c3eb4ec0230f" name="post:\billing\accounts\summary:application\json:customer-billing-crm-eapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="billing-experience-test-suite-get:\billing\(productId)\statements\(statementId)\details:customer-billing-crm-eapi-configTest" doc:id="e7e9d881-2830-4a17-8846-31000e0c24a3" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\billing\(productId)\statements\(statementId)\details:customer-billing-crm-eapi-config" doc:id="737fdb6a-fd23-46a2-82b9-bb5e8506f369" name="get:\billing\(productId)\statements\(statementId)\details:customer-billing-crm-eapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="billing-experience-test-suite-get:\billing\(productId)\statements\(statementId)\pdf:customer-billing-crm-eapi-configTest" doc:id="ec09a306-12b2-48b2-9da2-0e2d4b7dcfe7" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\billing\(productId)\statements\(statementId)\pdf:customer-billing-crm-eapi-config" doc:id="9303a1d9-9c63-472e-ac0f-a8c001dbd0f9" name="get:\billing\(productId)\statements\(statementId)\pdf:customer-billing-crm-eapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="billing-experience-test-suite-get:\billing\(productId)\currentBill\(ban):customer-billing-crm-eapi-configTest" doc:id="3ebb93ea-1deb-4973-8983-2524858b2dd8" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\billing\(productId)\currentBill\(ban):customer-billing-crm-eapi-config" doc:id="5c5ee893-bfa9-4b1c-92ea-3c6771643810" name="get:\billing\(productId)\currentBill\(ban):customer-billing-crm-eapi-config"/>
+		</munit:execution>
+	</munit:test>
+
+
+</mule>

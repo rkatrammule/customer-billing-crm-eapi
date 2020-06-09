@@ -1,0 +1,27 @@
+#General Properties 
+api:
+  id: "1234567"
+  
+http:
+  host: "localhost"
+  port: "8081"
+
+#The Mule System API Details for Billing
+billingProcessAPI:
+  http:     
+    host : "localhost"
+    port : "8082"
+    basePath : "/api"    
+    reconAttempts: "3"
+    reconFrequency: "20000"
+    maxConnections: "10"
+    connTimeout: "120000"
+    billSummaryPath: "/billing/accounts/summary"
+    billDetailsPath: "/billing/{productId}/statements/{statementId}/details"
+    billPdfPath: "/billing/{productId}/statements/{statementId}/pdf"
+    currentBillPath: "/billing/{productId}/currentBill/{ban}"
+    clientId: "123"
+    clientSecret: "123"
+
+
+

@@ -1,0 +1,25 @@
+#%RAML 1.0 DataType
+properties:
+  product: 
+   type: string
+   description: The product type to request the bill details
+   enum:
+     - Wireless
+     - Wireline
+     - OTT
+   example: "OTT"
+  ban: 
+   type: string
+   description: unique identifier of the account
+   example:
+     value: "12345678"
+  startDate: 
+    type: date-only
+    description: accept format of yyyy-MM-dd
+    example:
+      value: "2020-12-27"     
+  endDate :
+    type: date-only
+    description: accept format of yyyy-MM-dd
+    example:
+      value: "2020-12-27"
