@@ -21,6 +21,8 @@
 				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
 			</http:error-response>
 		</http:listener>
+		<set-variable value="#[attributes.headers.uuid default uuid()]" doc:name="uuid" doc:id="43a2736c-5325-415e-8bda-851c369ddd73" variableName="uuid"/>
+		<set-variable value="#[attributes.headers.'idp-trace-id']" doc:name="idpTraceId" doc:id="2af4134b-714e-4dd5-ad2d-2a2c013071f1" variableName="idpTraceId"/>
 		<apikit:router
 			config-ref="customer-billing-crm-eapi-config" />
 	</flow>

@@ -1,5 +1,7 @@
 #General Properties 
 api:
+  name: "customer-billing-crm-eapi"
+  version: "v1"
   id: "1234567"
   
 http:

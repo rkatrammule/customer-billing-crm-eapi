@@ -116,15 +116,14 @@ output application/json
 ---
 {
   success: false,
-  apiName: "customer-billing-crm-eapi",
-  version: "v1",
-  idpTraceId: "f80c9750-0252-11ea-a538-f606160048e8",
-  uuid: "23be1978-a451-11ea-bb37-0242ac130002",
-  timestamp: "2020-05-21T13:09:57.714-05:00",
+  apiName: '${secure::api.name}',
+  version: '${secure::api.version}',
+  idpTraceId: vars.idpTraceId,
+  uuid: vars.uuid,
+  timestamp: now(),
   errorDetails: {
-    code: 500,
-    errorMessage: payload.error,
-    additionalInfo: "There were issues accessing the underlying API."
+    code: vars.httpStatus default 500,
+    errorMessage: payload.error,    
   }
 }]]></ee:set-payload>
 			</ee:message>
