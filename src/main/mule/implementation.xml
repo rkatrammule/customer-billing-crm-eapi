@@ -36,7 +36,8 @@ http://www.mulesoft.org/schema/mule/att-mule-applicationlogger http://www.muleso
 ---
 {
 	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+	"client_id" : "${secure::billingProcessAPI.http.clientId}",
+	"uuid" : vars.uuid
 }]]]></http:headers>
 			<http:uri-params><![CDATA[#[output application/java
 ---
@@ -69,7 +70,8 @@ http://www.mulesoft.org/schema/mule/att-mule-applicationlogger http://www.muleso
 ---
 {
 	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+	"client_id" : "${secure::billingProcessAPI.http.clientId}",
+	"uuid" : vars.uuid
 }]]]></http:headers>
 		</http:request>
 		<att-mule-applicationlogger:log-message
@@ -104,7 +106,8 @@ http://www.mulesoft.org/schema/mule/att-mule-applicationlogger http://www.muleso
 ---
 {
 	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+	"client_id" : "${secure::billingProcessAPI.http.clientId}",
+	"uuid" : vars.uuid
 }]]]></http:headers>
 			<http:uri-params><![CDATA[#[output application/java
 ---
@@ -114,7 +117,8 @@ http://www.mulesoft.org/schema/mule/att-mule-applicationlogger http://www.muleso
 }]]]></http:uri-params>
 		</http:request>
 		
-
+		
+		
 		<att-mule-applicationlogger:log-message
 			doc:name="log-end" doc:id="ba1148dd-d691-4bd5-9ac2-db64b22d1fc2"
 			config-ref="ATT_Mule_Application_Logger_Config"
@@ -149,7 +153,8 @@ http://www.mulesoft.org/schema/mule/att-mule-applicationlogger http://www.muleso
 ---
 {
 	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+	"client_id" : "${secure::billingProcessAPI.http.clientId}",
+	"uuid" : vars.uuid
 }]]]></http:headers>
 			<http:uri-params><![CDATA[#[output application/java
 ---
