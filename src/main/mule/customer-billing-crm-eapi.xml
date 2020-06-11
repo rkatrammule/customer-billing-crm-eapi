@@ -6,6 +6,8 @@
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	
 	<flow name="customer-billing-crm-eapi-main">
 		<http:listener path="/api/*"
 			config-ref="customer-billing-crm-eapi-httpListenerConfig">
@@ -24,101 +26,18 @@
 	</flow>
 	<flow
 		name="post:\billing\accounts\summary:application\json:customer-billing-crm-eapi-config">
-		<http:request method="POST" doc:name="Billing Summary Details"
-			doc:id="2e902dd9-a324-4d10-ba7a-7a59db5caf5e"
-			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
-			path="${secure::billingProcessAPI.http.billSummaryPath}">
-			<http:headers><![CDATA[#[output application/java
----
-{
-	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
-}]]]></http:headers>
-		</http:request>
+		<flow-ref doc:name="bill-summary-details-sub-flow" doc:id="e4bed054-1ab9-46fb-ad9e-fbde62f7bfa4" name="bill-summary-details-sub-flow" />
 	</flow>
 	<flow
 		name="get:\billing\(productId)\statements\(statementId)\details:customer-billing-crm-eapi-config">
-		<ee:transform>
-			<ee:variables>
-				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
-				</ee:set-variable>
-				<ee:set-variable variableName="statementId">attributes.uriParams.'statementId'
-				</ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<http:request method="GET" doc:name="Billing Details"
-			doc:id="450ed45e-ba51-475f-836d-37e9de2087ec"
-			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
-			path="${secure::billingProcessAPI.http.billDetailsPath}">
-			<http:headers><![CDATA[#[output application/java
----
-{
-	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
-}]]]></http:headers>
-			<http:uri-params><![CDATA[#[output application/java
----
-{
-	"productId" : vars.productId,
-	"statementId" : vars.statementId
-}]]]></http:uri-params>
-		</http:request>
+		<flow-ref doc:name="product-statement-details-sub-flow" doc:id="b31aa583-aac2-4b10-91f5-02ab2d907621" name="product-statement-details-sub-flow" />
 	</flow>
 	<flow
 		name="get:\billing\(productId)\statements\(statementId)\pdf:customer-billing-crm-eapi-config">
-		<ee:transform>
-			<ee:variables>
-				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
-				</ee:set-variable>
-				<ee:set-variable variableName="statementId">attributes.uriParams.'statementId'
-				</ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<http:request method="GET" doc:name="Billing PDF"
-			doc:id="6477fa51-4862-4cd0-8bb9-2c2c9aa9e50e"
-			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
-			path="${secure::billingProcessAPI.http.billPdfPath}">
-			<http:headers><![CDATA[#[output application/java
----
-{
-	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
-}]]]></http:headers>
-			<http:uri-params><![CDATA[#[output application/java
----
-{	
-	"productId" : vars.productId,
-	"statementId" : vars.statementId
-}]]]></http:uri-params>
-		</http:request>
+		<flow-ref doc:name="product-statement-pdf-sub-flow" doc:id="b440fd96-4f38-40a9-9a55-0384321ee0bc" name="product-statement-pdf-sub-flow" />
 	</flow>
 	<flow
 		name="get:\billing\(productId)\currentBill\(ban):customer-billing-crm-eapi-config">
-		<ee:transform>
-			<ee:variables>
-				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
-				</ee:set-variable>
-				<ee:set-variable variableName="ban">attributes.uriParams.'ban'
-				</ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<http:request method="GET"
-			doc:name="Billing Process API currentBill"
-			doc:id="c0ce3afc-3292-45ec-b0e0-1bec03cefb7d"
-			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
-			path="${secure::billingProcessAPI.http.currentBillPath}">
-			<http:headers><![CDATA[#[output application/java
----
-{
-	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
-	"client_id" : "${secure::billingProcessAPI.http.clientId}"
-}]]]></http:headers>
-			<http:uri-params><![CDATA[#[output application/java
----
-{
-	"productId" : vars.productId,
-	"ban" : vars.ban
-}]]]></http:uri-params>
-		</http:request>
+		<flow-ref doc:name="product-current-bill-details-sub-flow" doc:id="4f290909-5039-42d3-bb94-063012052f7c" name="product-current-bill-details-sub-flow" />
 	</flow>
 </mule>

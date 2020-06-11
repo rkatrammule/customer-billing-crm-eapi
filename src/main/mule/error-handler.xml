@@ -123,8 +123,8 @@ output application/json
   timestamp: "2020-05-21T13:09:57.714-05:00",
   errorDetails: {
     code: 500,
-    message: error.errorMessage.payload,
-    additionalInfo: "Bad Connectivity : There were issues accessing the Billing API."
+    errorMessage: payload.error,
+    additionalInfo: "There were issues accessing the underlying API."
   }
 }]]></ee:set-payload>
 			</ee:message>

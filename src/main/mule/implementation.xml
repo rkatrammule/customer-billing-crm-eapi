@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:att-mule-applicationlogger="http://www.mulesoft.org/schema/mule/att-mule-applicationlogger"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/att-mule-applicationlogger http://www.mulesoft.org/schema/mule/att-mule-applicationlogger/current/mule-att-mule-applicationlogger.xsd">
+	<sub-flow name="product-statement-details-sub-flow"
+		doc:id="a518fd8e-127d-4462-a576-21f31e642584">
+		<att-mule-applicationlogger:log-message
+			doc:name="log-start" doc:id="c0d39ce6-b100-439c-8edb-6e1cbbf56042"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="Start of flow product-statement-details-sub-flow"
+			method="#[vars.logHeaders.method]" reqHeaders="#[attributes.headers]"
+			uri="#[vars.logHeaders.uri]"
+			reqPayload='#[write({"ban" :attributes.uriParams.ban , "productId" : attributes.uriParams.productId},"application/json") as String]' />
+		<ee:transform doc:name="set uri params">
+			<ee:variables>
+				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
+				</ee:set-variable>
+				<ee:set-variable variableName="statementId">attributes.uriParams.'statementId'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="billing details"
+			doc:id="450ed45e-ba51-475f-836d-37e9de2087ec"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.billDetailsPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"productId" : vars.productId,
+	"statementId" : vars.statementId
+}]]]></http:uri-params>
+		</http:request>
+		<att-mule-applicationlogger:log-message
+			doc:name="log-end" doc:id="9c024070-499d-48d8-8271-5b99e3ad3675"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="End of flow product-statement-details-sub-flow"
+			method="#[vars.logHeaders.method]" uri="#[vars.logHeaders.uri]" />
+	</sub-flow>
+	<sub-flow name="bill-summary-details-sub-flow"
+		doc:id="fd8ce293-847b-4264-9ed8-159541ad8668">
+		<att-mule-applicationlogger:log-message
+			doc:name="log-start" doc:id="2c37fd58-aea0-4fe1-a9a7-6cdf31faf483"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="Start of flow bill-summary-details-sub-flow"
+			method="#[vars.logHeaders.method]" reqHeaders="#[attributes.headers]"
+			uri="#[vars.logHeaders.uri]"
+			reqPayload='#[write({"ban" :attributes.uriParams.ban , "billerId" : attributes.uriParams.billerId},"application/json") as String]' />
+		<http:request method="POST"
+			doc:name="billing summary details"
+			doc:id="2e902dd9-a324-4d10-ba7a-7a59db5caf5e"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.billSummaryPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+		</http:request>
+		<att-mule-applicationlogger:log-message
+			doc:name="log-end" doc:id="fbff9d29-6c70-4723-ad49-3f0577b2dd3e"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="End of flow bill-summary-details-sub-flow"
+			method="#[vars.logHeaders.method]" uri="#[vars.logHeaders.uri]" />
+	</sub-flow>
+	<sub-flow name="product-statement-pdf-sub-flow"
+		doc:id="beb90104-a594-4af9-a1fd-e8cdfda4ee73">
+		<att-mule-applicationlogger:log-message
+			doc:name="log-start" doc:id="c91c6fc0-879c-4f15-8304-749b6a76003f"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="Start of flow product-statement-pdf-sub-flow"
+			method="#[vars.logHeaders.method]" reqHeaders="#[attributes.headers]"
+			uri="#[vars.logHeaders.uri]"
+			reqPayload='#[write({"ban" :attributes.uriParams.ban , "productId" : attributes.uriParams.productId},"application/json") as String]' />
+
+		<ee:transform doc:name="set uri params">
+			<ee:variables>
+				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
+				</ee:set-variable>
+				<ee:set-variable variableName="statementId">attributes.uriParams.'statementId'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="billing pdf"
+			doc:id="241bba0f-9589-44ee-bd73-1df3d0b7ad86"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.billPdfPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{	
+	"productId" : vars.productId,
+	"statementId" : vars.statementId
+}]]]></http:uri-params>
+		</http:request>
+		
+
+		<att-mule-applicationlogger:log-message
+			doc:name="log-end" doc:id="ba1148dd-d691-4bd5-9ac2-db64b22d1fc2"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="End of flow product-statement-pdf-sub-flow"
+			method="#[vars.logHeaders.method]" uri="#[vars.logHeaders.uri]" />
+
+	</sub-flow>
+	<sub-flow name="product-current-bill-details-sub-flow"
+		doc:id="f810644e-f47a-42a9-b675-fddb78a9e713">
+		<att-mule-applicationlogger:log-message
+			doc:name="log-start" doc:id="9db090c1-bf59-42bd-b81d-9ede669ee73a"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="Start of flow product-current-bill-details-sub-flow"
+			method="#[vars.logHeaders.method]" reqHeaders="#[attributes.headers]"
+			uri="#[vars.logHeaders.uri]"
+			reqPayload='#[write({"ban" :attributes.uriParams.ban , "productId" : attributes.uriParams.productId},"application/json") as String]' />
+
+		<ee:transform doc:name="set uri params">
+			<ee:variables>
+				<ee:set-variable variableName="productId">attributes.uriParams.'productId'
+				</ee:set-variable>
+				<ee:set-variable variableName="ban">attributes.uriParams.'ban'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET"
+			doc:name="billing process api currentBill"
+			doc:id="2c6e86a8-237b-43a8-9b77-fbd51e14ba0f"
+			config-ref="HTTPS_Billing_ProcessAPI_Request_config"
+			path="${secure::billingProcessAPI.http.currentBillPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "${secure::billingProcessAPI.http.clientSecret}",
+	"client_id" : "${secure::billingProcessAPI.http.clientId}"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"productId" : vars.productId,
+	"ban" : vars.ban
+}]]]></http:uri-params>
+		</http:request>
+		<att-mule-applicationlogger:log-message
+			doc:name="log-end" doc:id="6b827f85-d43d-4eac-8923-69315c4d6fc8"
+			config-ref="ATT_Mule_Application_Logger_Config"
+			message="End of flow product-current-bill-details-sub-flow"
+			method="#[vars.logHeaders.method]" uri="#[vars.logHeaders.uri]" />
+
+	</sub-flow>
+</mule>
